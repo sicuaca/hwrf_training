@@ -38,7 +38,8 @@ $ source ~/.bashrc
 ```
 
 ## Jasper Install
-
+Configuring JasPer: This is a compression library necessary for compiling WPS (specifically ungrib) with GRIB2 capability.
+Assuming all the **export** commands from the NetCDF install are already set, you can move on to the commands to install jasper.
 ```console
 $ cd $HOME/raw
 $ wget https://www.ece.uvic.ca/~frodo/jasper/software/jasper-1.900.1.zip
@@ -51,8 +52,8 @@ $ source ~/.bashrc
 ```
 
 ## Libpng install
-Configuring libpng: 
-
+This is a compression library necessary for compiling WPS (specifically ungrib) with GRIB2 capability.
+Assuming all the **export** commands from the NetCDF install are already set, you can move on to the commands to install libpng.
 ```console
 $ cd $HOME/raw
 $ wget https://sourceforge.net/projects/libpng/files/libpng16/1.6.37/libpng-1.6.37.tar.gz
@@ -67,7 +68,6 @@ $ source ~/.bashrc
 ## ZLib install
 Configuring zlib: This is a compression library necessary for compiling WPS (specifically ungrib) with GRIB2 capability.
 Assuming all the **export** commands from the NetCDF install are already set, you can move on to the commands to install zlib.
-
 ```console
 $ cd $HOME/raw
 $ wget http://www.zlib.net/fossils/zlib-1.2.11.tar.gz
@@ -105,77 +105,85 @@ $ make install
 $ source ~/.bashrc
 ```
 
-**netCDF (C library)**
-```console
-$ wget -nc ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-c-4.7.4.tar.gz
-$ tar -xvzf netcdf-c-4.7.4.tar.gz
-$ cd netcdf-c-4.7.4
-$ CC=mpicc CPPFLAGS="-I/home/<your-user-name>/libraries/include" LDFLAGS="-L/home/<your-user-name>/libraries/lib" ./configure --enable-shared --enable-parallel-tests --enable-netcdf4 --disable-filter-testing --disable-dap --prefix=/home/<your-user-name>/libraries
-$ make 
-$ make install
-$ cd ..
-```
-
-**netCDF (Fortran interface library)**
+## PnetCDF install
 
 ```console
-$ wget -nc ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-4.5.3.tar.gz
-$ tar -xvzf netcdf-fortran-4.5.3.tar.gz
-$ cd netcdf-fortran-4.5.3
-$ export FC=mpifort
-$ export F77=mpif77
-$ CPPFLAGS="-I/home/<your-user-name>/libraries/include" LDFLAGS="-L/home/<your-user-name>/libraries/lib" LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/<your-user-name>/libraries/lib LIBS="-lnetcdf -lhdf5_hl -lhdf5 -lz" ./configure --enable-parallel-tests --enable-shared --prefix=/home/<your-user-name>/libraries
-$ make 
-$ make install
-$ cd ..
-```
-
-
-**JASPER**
-Configuring JasPer: This is a compression library necessary for compiling WPS (specifically ungrib) with GRIB2 capability.
-Assuming all the **export** commands from the NetCDF install are already set, you can move on to the commands to install jasper.
-
-```console
-$ wget -nc http://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/jasper-1.900.1.tar.gz
-$ tar -xvzf jasper-1.900.1.tar.gz
-$ cd jasper-1.900.1
-$ ./configure --prefix=/home/<your-user-name>/libraries
+$ cd $HOME/raw
+$ wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
+$ tar xzvf pnetcdf-1.12.3.tar.gz
+$ cd pnetcdf-1.12.3
+$ CC=mpicc FC=mpifort CFLAGS=-fPIC ./configure --prefix=${lokasi} --enable-relax-coord-bound
 $ make
 $ make install
-$ cd ..
-$ export JASPERLIB=/home/<your-user-name>/libraries/lib
-$ export JASPERINC=/home/<your-user-name>/libraries/include
+$ source ~/.bashrc
 ```
 
-**LIBPNG**
-This is a compression library necessary for compiling WPS (specifically ungrib) with GRIB2 capability.
-Assuming all the **export** commands from the NetCDF install are already set, you can move on to the commands to install libpng.
+## Parallel io install
+
 ```console
-$ wget -nc http://sourceforge.net/projects/libpng/files/libpng16/1.6.37/libpng-1.6.37.tar.gz
-$ tar xvzf libpng-1.6.37.tar.gz 
-$ cd libpng-1.6.37/
-$ ./configure --prefix=/home/<your-user-name>/libraries
+$ cd $HOME/raw
+$ wget https://github.com/NCAR/ParallelIO/archive/refs/tags/pio2_5_9.tar.gz
+$ tar -xvzf pio2_5_9.tar.gz
+$ cd ParallelIO-pio2_5_9
+$ mkdir build
+$ cd build
+$ CC=mpicc FC=mpifort cmake -DNetCDF_C_PATH=${lokasi} -DNetCDF_Fortran_PATH=${lokasi} -DPnetCDF_PATH=${lokasi} -DPIO_HDF5_LOGGING=On -DPIO_USE_MALLOC=On -DPIO_ENABLE_TIMING=OFF -DCMAKE_INSTALL_PREFIX=${lokasi} ..
 $ make
 $ make install
-$ cd 
+$ source ~/.bashrc
 ```
 
+## netCDF (C library)
 
-## Building WRFV4
+```console
+$ cd $HOME/raw
+$ wget https://downloads.unidata.ucar.edu/netcdf-c/4.9.0/netcdf-c-4.9.0.tar.gz
+$ tar xzvf netcdf-c-4.9.0.tar.gz
+$ cd netcdf-c-4.9.0
+##pay attention with “kutip”
+$ LDFLAGS="-L${lokasi}/lib" CPPFLAGS="-I${lokasi}/include" LIBS="-lhdf5_hl -lhdf5 -lz -ldl” LD_LIBRARY_PATH=${lokasi}:$LD_LIBRARY_PATH CC=mpicc FCFLAGS="-m64" FFLAGS="-m64” ./configure --prefix=${lokasi} --enable-shared --enable-dap --enable-netcdf4 --enable-pnetcdf --enable-parallel-tests
+$ make
+$ make install
+$ source ~/.bashrc
+```
+
+## netCDF (Fortran interface library)
+
+```console
+$ cd $HOME/raw
+$ wget https://downloads.unidata.ucar.edu/netcdf-fortran/4.6.0/netcdf-fortran-4.6.0.tar.gz
+$ tar xzvf netcdf-fortran-4.6.0.tar.gz
+$ cd netcdf-fortran-4.6.0
+$ LDFLAGS="-L${lokasi}/lib" CPPFLAGS="-I${lokasi}/include" LIBS="-lhdf5_hl -lhdf5 -lz -ldl -lnetcdf" LD_LIBRARY_PATH=${lokasi}:$LD_LIBRARY_PATH CC=mpicc FC=mpifort ./configure --prefix=${lokasi} --enable-parallel-tests
+$ make
+$ make install
+$ source ~/.bashrc
+```
+
+## Building HWRF
 
 First of all, we need to download the source code from
 ```console
-$ git clone https://github.com/wrf-model/WRF
-$ cd WRF/
+$ cd $HOME
+$ git clone https://github.com/NCAR/HWRFdev.git
+$ cd $HOME/HWRFdev
+$ vi $HOME/.bashrc
+$ export lokasi=/home/{user}/mpas-lib
+$ export NETCDF=${lokasi}
+$ export JASPERLIB=${lokasi}/lib
+$ export JASPERINC=${lokasi}/include
+$ export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+$ export WRF_EM_CORE=1
+$ export HWRF=1
+$ export WRFIO_NCD_LARGE_FILE_SUPPORT=1 
 ```
 
 Now we are able to run the configure 
 
 ```console
-$ export NETCDF=/home/<your-user-name>/libraries
 $ ./configure
 ```
-You will see various options. Choose the option that lists the compiler you are using and the way you wish to build WRF (i.e., serially or in parallel). Although there are 3 different types of parallel (smpar, dmpar, and dm+sm), it is recommend choosing dmpar option.
+You will see various options. Choose the option that lists the compiler you are using and the way you wish to build HWRF (i.e., serially or in parallel). Although there are 3 different types of parallel (smpar, dmpar, and dm+sm), it is recommend choosing dmpar option.
 
 ```console
 checking for perl5... no
@@ -243,7 +251,11 @@ This build of WRF will use classic (non-compressed) NETCDF format
 
 ```
 
-Once your configuration is complete, you should have a `configure.wrf` file, and you are ready to compile. To compile WRFV4.4.1, you will need to decide which type of case you wish to compile. The options are listed below.
+Once your configuration is complete, you should have a `configure.wrf` file, and you are ready to compile. Edit first configure.wrf as following:
+```console
+CFLAGS          =    $(CFLAGS_LOCAL) -DDM_PARALLEL  \                      -DMAX_HISTORY=$(MAX_HISTORY) -DNMM_CORE=$(WRF_NMM_CORE) -DLANDREAD_STUB
+```
+To compile HWRFV, you will need to decide which type of case you wish to compile. The options are listed below.
 ```console
 em_real (3d real case)
 em_quarter_ss (3d ideal case)
@@ -259,10 +271,10 @@ em_seabreeze2d_x (2d ideal case)
 em_scm_xy (1d ideal case)
 ```
 
-For this purpose we are going to compile WRF for real cases. Compilation should take about 20-30 minutes. The ongoing compilation can be checked.
+For this purpose we are going to compile HWRF. Compilation should take about 20-30 minutes. The ongoing compilation can be checked.
 ```console
-$ ./compile em_real >& compile.log &
-$ tail -f compile.log
+$ ./compile nmm_real &> log &
+ls main/*exe  (real_nmm.exe, wrf.exe)
 ```
 
 If we see this message, you done it right ;)
@@ -274,130 +286,51 @@ build completed: lun nov 18 21:56:41 -03 2019
  
 --->                  Executables successfully built                  <---
  
--rwxrwxr-x. 1 wrf wrf 57432880 nov 18 21:56 main/ndown.exe
--rwxrwxr-x. 1 wrf wrf 57309864 nov 18 21:56 main/real.exe
--rwxrwxr-x. 1 wrf wrf 56831120 nov 18 21:56 main/tc.exe
+-rwxrwxr-x. 1 wrf wrf 57309864 nov 18 21:56 main/real_nmm.exe
 -rwxrwxr-x. 1 wrf wrf 61189576 nov 18 21:56 main/wrf.exe
  
 ==========================================================================
 ```
 
-Once the compilation completes, to check whether it was successful, you need to look for executables in the `WRFV3/main` directory.
+Once the compilation completes, to check whether it was successful, you need to look for executables in the `HWRFdev/main` directory.
 ```console
 $ ls -las main/*.exe
-ndown.exe (one-way nesting)
-real.exe (real data initialization)
-tc.exe (for tc bogusing--serial only)
+real_nmm.exe (real data initialization)
 wrf.exe (model executable)
 ```
 
-These executables are linked to 2 different directories. You can choose to run WRF from either directory.
+These executables are linked to 2 different directories. You can choose to run HWRF from either directory.
 ```console
-WRF/run
-WRF/test/em_real
-
-$ export WRF_DIR=$HOME/WRF
-```
-
-## Building WRFDA
-First of all, we need to compile WRFPLUS
-```console
-$ cp -r WRF WRFPLUS
-$ cd WRFPLUS/
-$ ./clean -a
-```
-
-Now we are able to run the configure 
-
-```console
-$ export NETCDF=/home/<your-user-name>/libraries
-$ ./configure wrfplus
-$ ./compile wrfplus
-```
-
-If we see this message, you done it right ;)
-
-```console
-0.36user 0.01system 0:00.39elapsed 97%CPU (0avgtext+0avgdata 164984maxresident)k
-4240inputs+118472outputs (0major+27280minor)pagefaults 0swaps
-make[1]: Leaving directory '/home/den/WRFPLUS/main'
-( cd run ; /bin/rm -f *.exe ; ln -s ../main/*.exe . )
-build started:   Thu Oct  6 11:56:13 WIB 2022
-build completed: Thu Oct 6 12:07:05 WIB 2022
-^C[1]+  Done                    ./compile wrfplus 
-```
-
-Once the compilation completes, to check whether it was successful, you need to look for executables in the `WRFV3/main` directory.
-```console
-$ ls -las main/*.exe
-wrfplus.exe
-$ cd ..
-```
-
-
-Then, we need to compile WRFDA
-```console
-$ cp -r WRF WRFDA
-$ cd WRFDA/
-$ ./clean -a
-```
-
-Now we are able to run the configure 
-
-```console
-$ export NETCDF=/home/<your-user-name>/libraries
-$ export NETCDF4=1
-$ export WRFPLUS_DIR=/home/<your-user-name>/libraries
-$ export HDF5=/home/<your-user-name>/libraries
-$ ./configure 4dvar
-$ ./compile all_wrfvar
-```
-
-If we see this message, you done it right ;)
-
-```console
-make[2]: Leaving directory '/home/den/WRFDA/var/obsproc/src'
-( /bin/rm -f obsproc.exe ;   ln -s src/obsproc.exe . )
-make[1]: Leaving directory '/home/den/WRFDA/var/obsproc'
-build started:   Fri Oct  7 08:34:13 WIB 2022
-build completed: Fri Oct 7 08:40:21 WIB 2022
-^C[1]+  Done                    ./compile all_wrfvar 
-
-```
-
-Once the compilation completes, to check whether it was successful, you need to look for executables in the `WRFV3/main` directory.
-```console
-$ ls -las var/obsproc/*.exe
-obsproc.exe
-$ ls -las var/da/da_wrfvar.exe
-da_wrfvar.exe
+HWRFdev/run
+HWRFdev/test/em_real
 ```
 
 Now we need to download and compile WPS
 
-## Building WPS
+## Building HWPS
 
-NOTE: If you choosed in WRF to run on shared memory architecture (smpar), you need to add the flag of OpenMP (-lgomp) to the WRF_LIB variable in file configure.wps (just append it after -lnetcdf).
+NOTE: If you choosed in HWRF to run on shared memory architecture (smpar), you need to add the flag of OpenMP (-lgomp) to the WRF_LIB variable in file configure.wps (just append it after -lnetcdf).
 
-After the WRF model is built, the next step is building the WPS program (if you plan to run real cases, as opposed to idealized cases). The WRF model MUST be properly built prior to trying to build the WPS programs. If you do not already have the WPS source code, move to your `Build_WRF` directory, download that file and unpack it. Then go into the WPS directory and make sure the WPS directory is clean.
+After the WRF model is built, the next step is building the WPS program (if you plan to run real cases, as opposed to idealized cases). The WRF model MUST be properly built prior to trying to build the WPS programs. If you do not already have the WPS source code, move to your `Build_WRF` directory, download that file and unpack it. Then go into the HWPSdev directory and make sure the HWPSdev directory is clean.
 
 ```console
-$ git clonehttps://github.com/wrf-model/WPS
-$ cd WPS
+$ cd $HOME
+$ git clone https://github.com/NCAR/HWPSdev.git 
+$ cd $HOME/HWPSdev
 ```
 
-The next step is to configure WPS, however, you first need to set some paths for the ungrib libraries and then you can configure.
+The next step is to configure HWPS, however, you first need to set some paths for the ungrib libraries and then you can configure.
 ```console
-./configure
+$ ./configure
 ```
 You should be given a list of various options for compiler types, whether to compile in serial or parallel, and whether to compile ungrib with GRIB2 capability. Unless you plan to create extremely large domains, it is recommended to compile WPS in serial mode, regardless of whether you compiled WRFV3 in parallel. It is also recommended that you choose a GRIB2 option (make sure you do not choose one that states "NO_GRIB2"). You may choose a non-grib2 option, but most data is now in grib2 format, so it is best to choose this option. You can still run grib1 data when you have built with grib2.
 
-Choose the option that lists a compiler to match what you used to compile WRF, serial, and grib2. Note: The option number will likely be different than the number you chose to compile WRFV4.1.2.
+Choose the option that lists a compiler to match what you used to compile WRF, serial, and grib2. Note: The option number will likely be different than the number you chose to compile HWRFdev.
 
 ```console
 Found Jasper environment variables for GRIB2 support...
-  $JASPERLIB = /home/wrf/wrf_io/lib
-  $JASPERINC = /home/wrf/wrf_io/include
+  $JASPERLIB = /home/HWRFdev/wrf_io/lib
+  $JASPERINC = /home/HWRFdev/wrf_io/include
 ------------------------------------------------------------------------
 Please select from among the following supported platforms.
 
@@ -456,11 +389,18 @@ Fortran compiler is 64-bit
 
 Your Fortran + NETCDF did not run successfully.
 ```
-The metgrid.exe and geogrid.exe programs rely on the WRF model's I/O libraries. There is a line in the configure.wps file that directs the WPS build system to the location of the I/O libraries from the WRF model.
+The metgrid.exe and geogrid.exe programs rely on the HWRF model's I/O libraries. There is a line in the configure.wps file that directs the WPS build system to the location of the I/O libraries from the HWRF model.
 
-Above is the default setting. As long as the name of the WRF model's top-level directory is "WRFV4.4.1" and the WPS and WRF directories are at the same level (which they should be if you have followed exactly as instructed on this page so far), then the existing default setting is correct and there is no need to change it. If it is not correct, you must modify the configure file and then save the changes before compiling.
+Above is the default setting. As long as the name of the WRF model's top-level directory is "HWRFdev" and the HWPSdev and HWRFdev directories are at the same level (which they should be if you have followed exactly as instructed on this page so far), then the existing default setting is correct and there is no need to change it. If it is not correct, you must modify the configure file and then save the changes before compiling.
 
-You can now compile WPS. Compilation should take a few minutes. The ongoing compilation can be checked.
+Once your configuration is complete, you should have a `configure.wps` file, and you are ready to compile. Edit first configure.wps as following:
+```console
+WRF_DIR	= ../HWRFdev
+DM_FC               = mpif90 #-f90=gfortran
+DM_CC               = mpicc #-cc=gcc
+F77FLAGS           = -ffixed-form -O -fconvert=big-endian -frecord-marker=4 -fno-range-check -fbacktrace
+```
+You can now compile HWPS. Compilation should take a few minutes. The ongoing compilation can be checked.
 ```console
 $ ./compile >& compile.log &
 $ tail -f compile.log
@@ -487,12 +427,12 @@ The directory infomation is given to the geogrid program in the namelist.wps fil
 ```console
 $ mkdir run_wrf
 $ cd run_wrf
-$ ln -sf ../WPS/*exe .
-$ ln -sf ../WPS/geogrid .
-$ ln -sf ../WPS/metgrid .
-$ ln -sf ../WPS/ungrib/Variable_Tables/Vtable.GFS Vtable
-$ ln -sf ../WPS/link_grib.csh .
-$ ln -sf ../WRF/run/* .
+$ ln -sf ../HWPSdev/*exe .
+$ ln -sf ../HWPSdev/geogrid .
+$ ln -sf ../HWPSdev/metgrid .
+$ ln -sf ../HWPSdev/ungrib/Variable_Tables/Vtable.GFS Vtable
+$ ln -sf ../HWPSdev/link_grib.csh .
+$ ln -sf ../HWPSdev/run/* .
 $ rm namelist.input
 $ nano namelist.wps
 
