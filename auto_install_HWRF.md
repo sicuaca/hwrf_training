@@ -61,35 +61,48 @@ $ cd libpng-1.6.37
 $ ./configure --prefix=${lokasi}
 $ make
 $ make install
+$ source ~/.bashrc
 ```
 
-**ZLib install**
+## ZLib install
 Configuring zlib: This is a compression library necessary for compiling WPS (specifically ungrib) with GRIB2 capability.
 Assuming all the **export** commands from the NetCDF install are already set, you can move on to the commands to install zlib.
 
 ```console
-$ wget -nc https://zlib.net/fossils/zlib-1.2.8.tar.gz
-$ tar -xvzf zlib-1.2.8.tar.gz
-$ cd zlib-1.2.8
-$ ./configure --prefix=/home/<your-user-name>/libraries
+$ cd $HOME/raw
+$ wget http://www.zlib.net/fossils/zlib-1.2.11.tar.gz
+$ tar xzvf zlib-1.2.11.tar.gz
+$ cd zlib-1.2.11
+$ CC=mpicc CFLAGS=-fPIC ./configure --prefix=${lokasi}
 $ make
 $ make install
-$ cd ..
+$ source ~/.bashrc
 ```
 
-**HDF5 parallel install**
+## SZLIB install
+
 ```console
-$ wget -nc https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.0/src/hdf5-1.12.0.tar.gz
-$ tar -xvzf hdf5-1.12.0.tar.gz
-$ cd hdf5-1.12.0
-$ export FC=mpifort
-$ export CC=mpicc
-$ export CXX=mpicc
-$ ./configure --prefix=/home/<your-user-name>/libraries --enable-parallel --with-zlib=/home/<your-user-name>/libraries --enable-fortran --enable-shared
+$ cd $HOME/raw
+$ wget https://support.hdfgroup.org/ftp/lib-external/szip/2.1.1/src/szip-2.1.1.tar.gz
+$ tar xzvf szip-2.1.1.tar.gz
+$ cd szip-2.1.1
+$ CC=mpicc CFLAGS=-fPIC ./configure --prefix=${lokasi}
 $ make
-$ make check
 $ make install
-$ cd ..
+$ source ~/.bashrc
+```
+
+## HDF5 parallel install
+
+```console
+$ cd $HOME/raw
+$ wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.13/hdf5-1.13.2/src/hdf5-1.13.2.tar.gz
+$ tar xzvf hdf5-1.13.2.tar.gz
+$ cd hdf5-1.13.2
+$ CC=mpicc ./configure --prefix=${lokasi} --enable-parallel --with-zlib=${lokasi} --with-szlib=${lokasi} --enable-fortran
+$ make –j 4
+$ make install
+$ source ~/.bashrc
 ```
 
 **netCDF (C library)**
