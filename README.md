@@ -1,5 +1,5 @@
 # How to install and running Hurricane Weather Research Forecasting (HWRF)
-To run WRF for hurricane simulations, including Hurricane WRF (HWRF), follow these general steps: install necessary software, configure WRF for a hurricane simulation, prepare input data, and then run the simulation. 
+### To run WRF for hurricane simulations, including Hurricane WRF (HWRF), follow these general steps: install necessary software, configure WRF for a hurricane simulation, prepare input data, and then run the simulation. 
 ## 1. Installation and Configuration:
 ### Install WRF: Download the WRF model code and WPS (WRF Preprocessing System) from the WRF website. 
 ### Configure WRF:
@@ -8,7 +8,7 @@ To run WRF for hurricane simulations, including Hurricane WRF (HWRF), follow the
 ### . Configure the WRF namelist files to specify the simulation domain, initial conditions, and other parameters. 
 ### Install Dependencies: Ensure that required libraries and compilers are installed on your system. 
 ### Compile WRF: Compile both the WRF core and WPS. 
-Configure for Hurricane Simulation: Set up the WPS to preprocess the input data, including geogridding and ungribbing. 
+### Configure for Hurricane Simulation: Set up the WPS to preprocess the input data, including geogridding and ungribbing. 
 ## 2. Input Data Preparation:
 ### Download Data:
 ### Download necessary input data, including initial conditions, boundaries, and other relevant information. 
