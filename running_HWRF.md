@@ -10,36 +10,43 @@ $ rm namelist.input*
 $ cp /home/{user}/HWRFdev/run/namelist.input .
 $ ln -sf /home/{user}/HWPSdev/*exe .
 $ ln -sf /home/{user}/HWPSdev/link_grib.csh .
+$ ln -sf /home/{user}/HWPSdev/geogrid .
+$ ln -sf /home/{user}/HWPSdev/ungrib .
+$ ln -sf /home/{user}/HWPSdev/metgrid .
+$ cp /home/{user}/HWPSdev/namelist.wps .
+$ ln -sf /home/{user}/HWPSdev/ungrib/Variable_Tables/Vtable.GFS Vtable
+$ cd geogrid
+$ ln -sf GEOGRID.TBL.NMM GEOGRID.TBL
+$ cd ../metgrid
+$ ln -sf METGRID.TBL.NMM METGRID.TBL
+$ cd ..
+$ ./link_grib.csh /mnt-storage1/userk01/LATIHAN/GDAS/gdas1.fnl0p25.202104*
+$ vi namelist.wps
 ```
 
 ```console
 &share
- wrf_core = 'ARW',
- max_dom = 1,
- start_date = '2022-09-27_00:00:00', '--:00:00', '--:00:00',
- end_date   = '2022-09-27_03:00:00', '--:00:00', '--:00:00',
- interval_seconds = 10800,
+ wrf_core = 'NMM',
+ max_dom = 3,
+ start_date = '2021-04-04_00:00:00','2021-04-04_00:00:00','2021-04-04_00:00:00',
+ end_date   = '2021-04-13_00:00:00','2021-04-13_00:00:00','2021-04-13_00:00:00',
+ interval_seconds = 21600
+ io_form_geogrid = 2,
 /
 
 &geogrid
- parent_id         = 1,1,2,
- parent_grid_ratio = 1,3,3,
- i_parent_start    = 1,99,122,
- j_parent_start    = 1,52,117,
- e_we          = 100,607,457,
- e_sn          = 100,298,346,
- geog_data_res = '30s','usgs_lakes+default','usgs_lakes+default',
- dx = 9000,
- dy = 9000,
- map_proj =  'mercator',
- ref_lat   = -2.613,
- ref_lon   = 118.815,
- truelat1  = -2.613,
- truelat2  = 0,
- stand_lon = 118.815,
- geog_data_path = '/home/<your-user-name>/WPS_GEOG',
- ref_x = 310.5,
- ref_y = 156.0,
+ parent_id         =   1,   1,   2,
+ parent_grid_ratio =   1,  130,  40,
+ j_parent_start    =   1,  130,   40,
+ e_we              =  300, 124,   154,
+ e_sn              =  300, 124,   154,
+ geog_data_res = '30s+default','30s+default','30s+default'
+ dx = 0.1500,
+ dy = 0.1500,
+ map_proj = 'rotated_ll',
+ ref_lat   =  -10.0000,
+ ref_lon   =  123.0000,
+ geog_data_path = '/mnt-storage1/userk01/LATIHAN/GEOG/'
 /
 
 &ungrib
@@ -48,13 +55,12 @@ $ ln -sf /home/{user}/HWPSdev/link_grib.csh .
 /
 
 &metgrid
- fg_name = 'FILE',
+ fg_name = 'FILE'
+ io_form_metgrid = 2, 
 /
-
 ```
 
 ```console
-$ ./link_grib.csh /home/<your-user-name>/Documents/gfs*
 $ ./geogrid.exe
 $ ./ungrib.exe
 $ ./metgrid.exe
@@ -64,112 +70,117 @@ $ nano namelist.input
 
 ```console
  &time_control
- run_days                            = 0,
- run_hours                           = 3,
+ run_days                            = 9,
+ run_hours                           = 0,   
  run_minutes                         = 0,
  run_seconds                         = 0,
- start_year                          = 2022, 2019,
- start_month                         = 09,   09, 
- start_day                           = 27,   04,
- start_hour                          = 00,   12,
- end_year                            = 2022, 2019,
- end_month                           = 09,   09,
- end_day                             = 27,   06,
- end_hour                            = 03,   00,
- interval_seconds                    = 10800
- input_from_file                     = .true.,.true.,
- history_interval                    = 60,  60,
- frames_per_outfile                  = 1, 1,
+ start_year                          = 2021,     2021, 2021, 
+ start_month                         = 04,       04, 04,
+ start_day                           = 04,       04, 04,
+ start_hour                          = 00,       00, 00,
+ start_minute                        = 00,       00, 00,
+ start_second                        = 00,       00, 00,
+ tstart                              = 00,       
+ end_year                            = 2021,     2021, 2021,
+ end_month                           = 04,       04, 04,
+ end_day                             = 13,       13, 13,
+ end_hour                            = 00,       00, 00,
+ end_minute                          = 00,       00,  00,
+ end_second                          = 00,       00, 00,
+ interval_seconds                    = 21600,
+ history_interval                    = 60,       60, 60,
+ frames_per_outfile                  = 1,        1, 1,
  restart                             = .false.,
- restart_interval                    = 3600,
+ restart_interval                    = 5400,
+ input_from_file					 = .true.,.true.,.true.,.false.,.false.,.false.,
+ fine_input_stream   = 0, 2, 2,
+ reset_simulation_start              = F,
+ io_form_input                       = 2
  io_form_history                     = 2
  io_form_restart                     = 2
- io_form_input                       = 2
  io_form_boundary                    = 2
+ io_form_auxinput1                   = 2
+ debug_level                         = 0 
  /
 
  &domains
- time_step                           = 45,
+ time_step                           = 27,
  time_step_fract_num                 = 0,
  time_step_fract_den                 = 1,
- max_dom                             = 1,
- e_we                                = 100,    220,
- e_sn                                = 100,    214,
- e_vert                              = 45,     45,
- dzstretch_s                         = 1.1
- p_top_requested                     = 5000,
+ max_dom                             = 3,
+ e_we                                = 300, 124,   154,
+ e_sn                                = 300, 124,   154,
+ e_vert                              = 38,       38, 38,
  num_metgrid_levels                  = 34,
- num_metgrid_soil_levels             = 4,
- dx                                  = 9000,
- dy                                  = 9000,
- grid_id                             = 1,     2,
- parent_id                           = 0,     1,
- i_parent_start                      = 1,     53,
- j_parent_start                      = 1,     25,
- parent_grid_ratio                   = 1,     3,
- parent_time_step_ratio              = 1,     3,
- feedback                            = 1,
- smooth_option                       = 0
+ dx                                  = .15,     .5,	.16666,
+ dy                                  = .15,     .5,	.16666,
+ p_top_requested                     = 5000. 
+ ptsgm                               = 42000.,
+ grid_id                             = 1,        2,	3,
+ parent_id                           = 0,        1, 2,   
+ i_parent_start                      = 1,        130,   40,
+ j_parent_start                      = 1,        130,   40,
+ parent_grid_ratio                   = 1,        3, 	3,
+ parent_time_step_ratio              = 1,        3, 	3,
+ vortex_interval					 = 15,15,15, 		!min
+ corral_dist 						 = 8,8,8, 		!coarse grid cells
  /
 
  &physics
- physics_suite                       = 'TROPICAL'
- mp_physics                          = -1,    -1,
- cu_physics                          = -1,    -1,
- ra_lw_physics                       = -1,    -1,
- ra_sw_physics                       = -1,    -1,
- bl_pbl_physics                      = -1,    -1,
- sf_sfclay_physics                   = -1,    -1,
- sf_surface_physics                  = -1,    -1,
- radt                                = 15,    15,
- bldt                                = 0,     0,
- cudt                                = 0,     0,
- icloud                              = 1,
- num_land_cat                        = 21,
- sf_urban_physics                    = 0,     0,
- fractional_seaice                   = 1,
+ mp_physics                          = 5,        5,5,
+ ra_lw_physics                       = 99,       99,99,
+ ra_sw_physics                       = 99,       99,99,
+ nrads                               = 105,      315,945,
+ nradl                               = 105,      315,945,
+ co2tf                               = 1,
+ sf_sfclay_physics                   = 2,        2,2,
+ sf_surface_physics                  = 2,        2, 2, 
+ bl_pbl_physics                      = 2,        2,2,
+ nphs                                = 6,        18,54,
+ cu_physics                          = 2,        0,0,
+ ncnvc                               = 6,        18,54,
+ tprec                               = 3,        3,3,
+ theat                               = 6,        6,6,
+ tclod                               = 6,        6,6,
+ trdsw                               = 6,        6,6,
+ trdlw                               = 6,        6,6,
+ tsrfc                               = 6,        6,6,
+ pcpflg                              = .false.,  .false., .false.,
+ num_soil_layers                     = 4,
+ mp_zero_out                         = 0
+ gwd_opt                             = 0
+ /
+
+ &dynamics
+ coac                                = 1.6,
+ codamp                              = 6.4,
+ slophc                              = 0.0064,
+ euler_adv                           = .true.,
+ idtadt                              = 2,
+ idtadc                              = 1
+ /
+
+ &bdy_control
+ spec_bdy_width                      = 1,
+ specified                           = .true.,.false., .false.,
+ nested                              = .false.,.true.,.true.,
  /
 
  &fdda
  /
-
- &dynamics
- hybrid_opt                          = 2, 
- w_damping                           = 0,
- diff_opt                            = 2,      2,
- km_opt                              = 4,      4,
- diff_6th_opt                        = 0,      0,
- diff_6th_factor                     = 0.12,   0.12,
- base_temp                           = 290.
- damp_opt                            = 3,
- zdamp                               = 5000.,  5000.,
- dampcoef                            = 0.2,    0.2,
- khdif                               = 0,      0,
- kvdif                               = 0,      0,
- non_hydrostatic                     = .true., .true.,
- moist_adv_opt                       = 1,      1,
- scalar_adv_opt                      = 1,      1,
- gwd_opt                             = 1,      0,
- /
-
- &bdy_control
- spec_bdy_width                      = 5,
- specified                           = .true.
- /
-
+ 
  &grib2
  /
 
  &namelist_quilt
  nio_tasks_per_group = 0,
- nio_groups = 1,
+ nio_groups = 1
  /
-
 ```
 
 ## Running WRF process
 ```console
-$ ./real.exe
+$ ./real_nmm.exe
 $ mpirun -n 2 ./wrf.exe &
 $ tail -f rsl.out.0000
 
@@ -178,6 +189,6 @@ $ tail -f rsl.out.0000
 ## Check the results
 
 ```console
-$ ncdump wrfout_d01_2022-09-27_00:00:00
+$ ncdump wrfout_d01_2021-04-04_00:00:00
 ```
 ## Finish
