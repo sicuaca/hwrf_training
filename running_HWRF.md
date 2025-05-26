@@ -187,11 +187,15 @@ $ tail -f rsl.out.0000
 ```
 
 ## Check the results
-
+Check the header of entire file
 ```console
-$ ncdump wrfout_d01_2021-04-04_00:00:00
+$ ncdump -h wrfout_d01_2021-04-04_00:00:00
 ```
-Example of python script
+Check the visualization of entire file
+```console
+$ ncview wrfout_d01_2021-04-04_00:00:00
+```
+Example of another visualization using python script
 ```console
 import netCDF4 as nc
 import cartopy.crs as ccrs
