@@ -191,4 +191,23 @@ $ tail -f rsl.out.0000
 ```console
 $ ncdump wrfout_d01_2021-04-04_00:00:00
 ```
+Example of python script
+```console
+import netCDF4 as nc
+import cartopy.crs as ccrs
+import matplotlib.pyplot as plt
+
+fh=nc.Dataset('hwrfrun/wrfout_d01_2021-04-03_06:00:00')
+lat=fh.variables['VLAT'][0]
+lon=fh.variables['VLON'][0]
+mslp=fh.variables['MSLP'][0]/100
+
+ax = plt.axes(projection=ccrs.PlateCarree())
+ax.coastlines()
+ax.set_extent([lon[0,0], lon[0,-1], lat[0,0], lat[-1,0]])
+ax.gridlines(draw_labels=True,color='black',alpha=0.5,linestyle='--')
+cs=ax.contourf(lon,lat,mslp,cmap= 'Blues_r', transform=ccrs.PlateCarree())
+plt.colorbar(cs,orientation='horizontal')
+plt.show()
+```
 ## Finish
