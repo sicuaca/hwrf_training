@@ -13,8 +13,8 @@ $ ln -sf /home/${user}/HWPSdev/link_grib.csh .
 $ ln -sf /home/${user}/HWPSdev/geogrid .
 $ ln -sf /home/${user}/HWPSdev/ungrib .
 $ ln -sf /home/${user}/HWPSdev/metgrid .
-$ cp /home/{user}/HWPSdev/namelist.wps .
-$ ln -sf /home/{user}/HWPSdev/ungrib/Variable_Tables/Vtable.GFS Vtable
+$ cp /home/${user}/HWPSdev/namelist.wps .
+$ ln -sf /home/${user}/HWPSdev/ungrib/Variable_Tables/Vtable.GFS Vtable
 $ cd geogrid
 $ ln -sf GEOGRID.TBL.NMM GEOGRID.TBL
 $ cd ../metgrid
