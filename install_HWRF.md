@@ -109,7 +109,7 @@ $ wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.13/hdf5-1.13.2/src/
 $ tar xzvf hdf5-1.13.2.tar.gz
 $ cd hdf5-1.13.2
 $ CC=mpicc ./configure --prefix=${lokasi} --enable-parallel --with-zlib=${lokasi} --with-szlib=${lokasi} --enable-fortran
-$ make –j 4
+$ make -j 4
 $ make install
 $ source ~/.bashrc
 ```
