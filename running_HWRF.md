@@ -112,8 +112,8 @@ $ nano namelist.input
  e_sn                                = 300, 124,   154,
  e_vert                              = 38,       38, 38,
  num_metgrid_levels                  = 34,
- dx                                  = .15,     .5,	.16666,
- dy                                  = .15,     .5,	.16666,
+ dx                                  = .075,     .025,	.008333,
+ dy                                  = .075,     .025,	.008333,
  p_top_requested                     = 5000. 
  ptsgm                               = 42000.,
  grid_id                             = 1,        2,	3,
