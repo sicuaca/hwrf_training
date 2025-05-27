@@ -287,7 +287,7 @@ wrf.exe (model executable)
 These executables are linked to 2 different directories. You can choose to run HWRF from either directory.
 ```console
 HWRFdev/run
-HWRFdev/test/em_real
+HWRFdev/test/nmm_real
 ```
 
 Now we need to download and compile WPS
