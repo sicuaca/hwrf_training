@@ -252,22 +252,8 @@ This build of WRF will use classic (non-compressed) NETCDF format
 
 Once your configuration is complete, you should have a `configure.wrf` file, and you are ready to compile. Edit first configure.wrf as following:
 ```console
-CFLAGS          =    $(CFLAGS_LOCAL) -DDM_PARALLEL  \                      -DMAX_HISTORY=$(MAX_HISTORY) -DNMM_CORE=$(WRF_NMM_CORE) -DLANDREAD_STUB
-```
-To compile HWRFV, you will need to decide which type of case you wish to compile. The options are listed below.
-```console
-em_real (3d real case)
-em_quarter_ss (3d ideal case)
-em_b_wave (3d ideal case)
-em_les (3d ideal case)
-em_heldsuarez (3d ideal case)
-em_tropical_cyclone (3d ideal case)
-em_hill2d_x (2d ideal case)
-em_squall2d_x (2d ideal case)
-em_squall2d_y (2d ideal case)
-em_grav2d_x (2d ideal case)
-em_seabreeze2d_x (2d ideal case)
-em_scm_xy (1d ideal case)
+CFLAGS          =    $(CFLAGS_LOCAL) -DDM_PARALLEL  \
+                     -DMAX_HISTORY=$(MAX_HISTORY) -DNMM_CORE=$(WRF_NMM_CORE) -DLANDREAD_STUB
 ```
 
 For this purpose we are going to compile HWRF. Compilation should take about 20-30 minutes. The ongoing compilation can be checked.
