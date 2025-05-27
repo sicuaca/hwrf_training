@@ -385,6 +385,15 @@ DM_FC               = mpif90 #-f90=gfortran
 DM_CC               = mpicc #-cc=gcc
 F77FLAGS           = -ffixed-form -O -fconvert=big-endian -frecord-marker=4 -fno-range-check -fbacktrace
 ```
+Edit file in ungrib/src/ngl/g2/intmath.f, when you using gnu9
+```console
+vi ungrib/src/ngl/g2/intmath.f
+## Change line 172 and 207 as follows, from old into new one
+172 old      if(iand(i,i-1)/=0) then
+172 new      if(iand(i,int(i-1,kind=2))/=0) then
+207 old      if(iand(i,i-1)/=0) then
+207 new      if(iand(i,int(i-1,kind=1))/=0) then
+```
 You can now compile HWPS. Compilation should take a few minutes. The ongoing compilation can be checked.
 ```console
 $ ./compile >& compile.log &
