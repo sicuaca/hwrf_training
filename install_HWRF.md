@@ -31,6 +31,15 @@ First and foremost, it is very important to have a MPICH. If you have these inst
 $ cd $HOME/raw
 $ wget https://www.mpich.org/static/downloads/4.0.2/mpich-4.0.2.tar.gz
 $ tar -xzvf mpich-4.0.2.tar.gz
+$ cd mpich
+$ ./configure --prefix=${lokasi}
+```
+If access denied, change the access with
+```console
+$ chmod u+x -R *
+```
+
+```console
 $ ./configure --prefix=${lokasi}
 $ make –j 4
 $ make install
