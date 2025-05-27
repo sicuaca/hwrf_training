@@ -4,17 +4,17 @@
 $ cd $HOME
 $ mkdir hwrfrun
 $ cd hwrfrun/
-$ ln -sf /home/{user}/HWRFdev/run/*
-$ ln -sf /home/{user}/HWRFdev/run/* .
+$ export user=tr10
+$ ln -sf /home/${user}/HWRFdev/run/* .
 $ rm namelist.input*
-$ cp /home/{user}/HWRFdev/run/namelist.input .
-$ ln -sf /home/{user}/HWPSdev/*exe .
-$ ln -sf /home/{user}/HWPSdev/link_grib.csh .
-$ ln -sf /home/{user}/HWPSdev/geogrid .
-$ ln -sf /home/{user}/HWPSdev/ungrib .
-$ ln -sf /home/{user}/HWPSdev/metgrid .
-$ cp /home/{user}/HWPSdev/namelist.wps .
-$ ln -sf /home/{user}/HWPSdev/ungrib/Variable_Tables/Vtable.GFS Vtable
+$ cp /home/${user}/HWRFdev/run/namelist.input .
+$ ln -sf /home/${user}/HWPSdev/*exe .
+$ ln -sf /home/${user}/HWPSdev/link_grib.csh .
+$ ln -sf /home/${user}/HWPSdev/geogrid .
+$ ln -sf /home/${user}/HWPSdev/ungrib .
+$ ln -sf /home/${user}/HWPSdev/metgrid .
+$ cp /home/${user}/HWPSdev/namelist.wps .
+$ ln -sf /home/${user}/HWPSdev/ungrib/Variable_Tables/Vtable.GFS Vtable
 $ cd geogrid
 $ ln -sf GEOGRID.TBL.NMM GEOGRID.TBL
 $ cd ../metgrid
@@ -36,13 +36,13 @@ $ vi namelist.wps
 
 &geogrid
  parent_id         =   1,   1,   2,
- parent_grid_ratio =   1,  130,  40,
+ parent_grid_ratio =   1,  3,  3,
  j_parent_start    =   1,  130,   40,
  e_we              =  300, 124,   154,
  e_sn              =  300, 124,   154,
  geog_data_res = '30s+default','30s+default','30s+default'
- dx = 0.1500,
- dy = 0.1500,
+ dx = 0.07500,
+ dy = 0.07500,
  map_proj = 'rotated_ll',
  ref_lat   =  -10.0000,
  ref_lon   =  123.0000,
@@ -112,8 +112,8 @@ $ nano namelist.input
  e_sn                                = 300, 124,   154,
  e_vert                              = 38,       38, 38,
  num_metgrid_levels                  = 34,
- dx                                  = .15,     .5,	.16666,
- dy                                  = .15,     .5,	.16666,
+ dx                                  = .075,     .025,	.008333,
+ dy                                  = .075,     .025,	.008333,
  p_top_requested                     = 5000. 
  ptsgm                               = 42000.,
  grid_id                             = 1,        2,	3,
