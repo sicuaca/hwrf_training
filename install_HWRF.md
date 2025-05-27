@@ -14,13 +14,13 @@ $ vi .bashrc
 ```
 Edit in the .bashrc file
 ```console
-export MPAS_EXTERNAL_LIBS=“-L/home/{user}/mpas-lib/lib -lhdf5_hl -lhdf5 -ldl -lz"
+export MPAS_EXTERNAL_LIBS="-L/home/{user}/mpas-lib/lib -lhdf5_hl -lhdf5 -ldl -lz"
 export MPAS_EXTERNAL_INCLUDES="-I/home/{user}/mpas-lib/include"
 export PNETCDF=/home/{user}/mpas-lib
 export NETCDF=/home/{user}/mpas-lib
 export NETCDF_PATH=$NETCDF
 export PIO=/home/{user}/mpas-lib
-export PATH=/home/{user}/mpas-lib/bin:/home/{user}/METIS/bin: /home/{user}/MPAS-Limited-Area :$PATH
+export PATH=/home/{user}/mpas-lib/bin:/home/{user}/METIS/bin:/home/{user}/MPAS-Limited-Area:$PATH
 export LD_LIBRARY_PATH=/home/{user}/mpas-lib/lib:/home/{user}/METIS/lib:$LD_LIBRARY_PATH 
 ```
 
