@@ -173,9 +173,8 @@ $ export NETCDF=${lokasi}
 $ export JASPERLIB=${lokasi}/lib
 $ export JASPERINC=${lokasi}/include
 $ export WRFIO_NCD_LARGE_FILE_SUPPORT=1
-$ export WRF_EM_CORE=1
+$ export WRF_NMM_CORE=1
 $ export HWRF=1
-$ export WRFIO_NCD_LARGE_FILE_SUPPORT=1 
 ```
 
 Now we are able to run the configure 
