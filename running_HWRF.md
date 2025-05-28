@@ -85,22 +85,21 @@ $ nano namelist.input
  end_month                           = 04,       04, 04,
  end_day                             = 13,       13, 13,
  end_hour                            = 00,       00, 00,
- end_minute                          = 00,       00,  00,
+ end_minute                          = 00,       00, 00,
  end_second                          = 00,       00, 00,
  interval_seconds                    = 21600,
  history_interval                    = 60,       60, 60,
- frames_per_outfile                  = 1,        1, 1,
+ frames_per_outfile                  = 1,        1, 60,
+ history_outname                     = '/path/directory/wrfout_d<domain>_<date>'
  restart                             = .false.,
  restart_interval                    = 5400,
- input_from_file					 = .true.,.true.,.true.,.false.,.false.,.false.,
- fine_input_stream   = 0, 2, 2,
  reset_simulation_start              = F,
  io_form_input                       = 2
  io_form_history                     = 2
  io_form_restart                     = 2
  io_form_boundary                    = 2
  io_form_auxinput1                   = 2
- debug_level                         = 0 
+ debug_level                         = 1 
  /
 
  &domains
@@ -117,34 +116,32 @@ $ nano namelist.input
  p_top_requested                     = 5000. 
  ptsgm                               = 42000.,
  grid_id                             = 1,        2,	3,
- parent_id                           = 0,        1, 2,   
+ parent_id                           = 0,        1,     2,  
  i_parent_start                      = 1,        130,   40,
  j_parent_start                      = 1,        130,   40,
  parent_grid_ratio                   = 1,        3, 	3,
  parent_time_step_ratio              = 1,        3, 	3,
- vortex_interval					 = 15,15,15, 		!min
- corral_dist 						 = 8,8,8, 		!coarse grid cells
  /
 
  &physics
- mp_physics                          = 5,        5,5,
- ra_lw_physics                       = 99,       99,99,
- ra_sw_physics                       = 99,       99,99,
- nrads                               = 105,      315,945,
- nradl                               = 105,      315,945,
+ mp_physics                          = 5,        5,	5,
+ ra_lw_physics                       = 99,       99,	99,		
+ ra_sw_physics                       = 99,       99,	99,		
+ nrads                               = 105,      315,	945,
+ nradl                               = 105,      315,	945,
  co2tf                               = 1,
- sf_sfclay_physics                   = 2,        2,2,
- sf_surface_physics                  = 2,        2, 2, 
- bl_pbl_physics                      = 2,        2,2,
- nphs                                = 6,        18,54,
- cu_physics                          = 2,        0,0,
- ncnvc                               = 6,        18,54,
- tprec                               = 3,        3,3,
- theat                               = 6,        6,6,
- tclod                               = 6,        6,6,
- trdsw                               = 6,        6,6,
- trdlw                               = 6,        6,6,
- tsrfc                               = 6,        6,6,
+ sf_sfclay_physics                   = 2,        2,	2,
+ sf_surface_physics                  = 2,        2, 	2,
+ bl_pbl_physics                      = 2,        2,	2,
+ nphs                                = 6,        18,	54,
+ cu_physics                          = 2,        2,	2,
+ ncnvc                               = 6,        18,	54,
+ tprec                               = 3,        3,	3,
+ theat                               = 6,        6,	6,
+ tclod                               = 6,        6,	6,
+ trdsw                               = 6,        6,	6,
+ trdlw                               = 6,        6,	6,
+ tsrfc                               = 6,        6,	6,
  pcpflg                              = .false.,  .false., .false.,
  num_soil_layers                     = 4,
  mp_zero_out                         = 0
@@ -162,8 +159,8 @@ $ nano namelist.input
 
  &bdy_control
  spec_bdy_width                      = 1,
- specified                           = .true.,.false., .false.,
- nested                              = .false.,.true.,.true.,
+ specified                           = .true.,
+ nested                              = .false.
  /
 
  &fdda
@@ -200,17 +197,19 @@ Example of another visualization using python script
 import netCDF4 as nc
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
+import numpy as np
 
-fh=nc.Dataset('hwrfrun/wrfout_d01_2021-04-03_06:00:00')
-lat=fh.variables['VLAT'][0]
-lon=fh.variables['VLON'][0]
-mslp=fh.variables['MSLP'][0]/100
-
+fh=nc.Dataset('wrfout_d01_2021-04-04_06:00:00')
+lat=fh.variables['HLAT'][0]
+lon=fh.variables['HLON'][0]
+u10=fh.variables['U10'][0]
+v10=fh.variables['V10'][0]
+ws=np.sqrt(u10*u10+v10*v10)
 ax = plt.axes(projection=ccrs.PlateCarree())
 ax.coastlines()
 ax.set_extent([lon[0,0], lon[0,-1], lat[0,0], lat[-1,0]])
 ax.gridlines(draw_labels=True,color='black',alpha=0.5,linestyle='--')
-cs=ax.contourf(lon,lat,mslp,cmap= 'Blues_r', transform=ccrs.PlateCarree())
+cs=ax.contourf(lon,lat,ws,cmap= 'Blues', transform=ccrs.PlateCarree())
 plt.colorbar(cs,orientation='horizontal')
 plt.show()
 ```
