@@ -201,7 +201,7 @@ import numpy as np
 
 fh=nc.Dataset('wrfout_d01_2021-04-04_06:00:00')
 lat=fh.variables['HLAT'][0]
-lon=fh.variables['HLON'][0];print(fh.variables['U10'])
+lon=fh.variables['HLON'][0]
 u10=fh.variables['U10'][0]
 v10=fh.variables['V10'][0]
 ws=np.sqrt(u10*u10+v10*v10)
