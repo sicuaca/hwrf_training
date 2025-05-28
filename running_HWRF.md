@@ -197,17 +197,19 @@ Example of another visualization using python script
 import netCDF4 as nc
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
+import numpy as np
 
-fh=nc.Dataset('hwrfrun/wrfout_d01_2021-04-03_06:00:00')
-lat=fh.variables['VLAT'][0]
-lon=fh.variables['VLON'][0]
-mslp=fh.variables['MSLP'][0]/100
-
+fh=nc.Dataset('wrfout_d01_2021-04-04_06:00:00')
+lat=fh.variables['HLAT'][0]
+lon=fh.variables['HLON'][0];print(fh.variables['U10'])
+u10=fh.variables['U10'][0]
+v10=fh.variables['V10'][0]
+ws=np.sqrt(u10*u10+v10*v10)
 ax = plt.axes(projection=ccrs.PlateCarree())
 ax.coastlines()
 ax.set_extent([lon[0,0], lon[0,-1], lat[0,0], lat[-1,0]])
 ax.gridlines(draw_labels=True,color='black',alpha=0.5,linestyle='--')
-cs=ax.contourf(lon,lat,mslp,cmap= 'Blues_r', transform=ccrs.PlateCarree())
+cs=ax.contourf(lon,lat,ws,cmap= 'Blues', transform=ccrs.PlateCarree())
 plt.colorbar(cs,orientation='horizontal')
 plt.show()
 ```
