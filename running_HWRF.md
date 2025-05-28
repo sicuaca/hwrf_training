@@ -90,6 +90,7 @@ $ nano namelist.input
  interval_seconds                    = 21600,
  history_interval                    = 60,       60, 60,
  frames_per_outfile                  = 1,        1, 60,
+ history_outname                     = '/path/directory/wrfout_d<domain>_<date>'
  restart                             = .false.,
  restart_interval                    = 5400,
  reset_simulation_start              = F,
